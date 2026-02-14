@@ -22,7 +22,31 @@ import google.generativeai as genai
 from groq import AsyncGroq
 
 from app.core.config import settings
-from app.schemas import ExamData, MindMapNode
+from pydantic import BaseModel
+from typing import List, Optional, Any, Dict
+
+# ── 1. القوالب (Schemas) محلياً لمنع مشاكل الاستيراد ──────────────────
+class Question(BaseModel):
+    id: int
+    question: str # تأكد إن الاسم 'question' مطابق للـ prompt بتاعك
+    options: Dict[str, str]
+    answer: str
+
+class TrueFalseQuestion(BaseModel):
+    id: int
+    question: str
+    answer: bool
+
+class ExamData(BaseModel):
+    mcq: List[Question]
+    true_false: List[TrueFalseQuestion]
+
+class MindMapNode(BaseModel):
+    id: str
+    label: str
+    children: List['MindMapNode'] = []
+
+MindMapNode.model_rebuild()
 
 logger = logging.getLogger(__name__)
 
