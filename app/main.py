@@ -31,12 +31,12 @@ logger = logging.getLogger(__name__)
 
 # ── App ──────────────────────────────────────────────────────────────────────
 app = FastAPI(
-    title="Ruya — Cognitive AI Engine",
-    description=(
-        "Production-grade educational AI microservice.\n"
-        "Upload a PDF → receive a 50-question exam + hierarchical mind map."
-    ),
-    version="2.0.0",
+    title="Ruya Enterprise Core API",
+    description="Scalable AI Backend for Ruya Educational Platform. Powered by Vercel Edge Network.",
+    version="3.0.0-production",
+    docs_url="/docs",
+    redoc_url=None ,
+
     responses={
         400: {"model": ErrorResponse},
         413: {"model": ErrorResponse},
