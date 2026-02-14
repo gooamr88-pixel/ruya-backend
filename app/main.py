@@ -18,7 +18,51 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
 from app.core.config import settings
-from app.schemas import APIResponse, ErrorResponse, ProcessingMeta, ResponseData
+from pydantic import BaseModel
+from typing import List, Optional, Any, Dict
+
+# ── Schemas (حطيناها هنا عشان السيرفر مايتوهش) ─────────────────────────────
+
+# 1. تعريف الأسئلة
+class Question(BaseModel):
+    id: int
+    text: str
+    options: Optional[List[str]] = None
+    correct_answer: str
+    type: str  # MCQ or True/False
+
+class Exam(BaseModel):
+    mcq: List[Question]
+    true_false: List[Question]
+
+# 2. تعريف الخريطة الذهنية
+class MindMapNode(BaseModel):
+    id: str
+    label: str
+    children: List['MindMapNode'] = []
+
+# 3. تعريف الرد النهائي
+class ProcessingMeta(BaseModel):
+    processing_time: str
+    file_name: str
+    total_pages: int
+
+class ResponseData(BaseModel):
+    exam: Exam
+    mind_map: Dict[str, Any] 
+
+class APIResponse(BaseModel):
+    status: str
+    meta: ProcessingMeta
+    data: ResponseData
+
+class ErrorResponse(BaseModel):
+    status: str
+    message: str
+    detail: Optional[str] = None
+
+# عشان الخريطة الذهنية تعرف تنده نفسها (Recursive)
+MindMapNode.model_rebuild()
 from app.ai_engine import process_document
 from app.services.file_service import extract_text_from_file
 
