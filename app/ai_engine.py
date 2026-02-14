@@ -22,7 +22,7 @@ import google.generativeai as genai
 from groq import AsyncGroq
 
 from app.core.config import settings
-from app.schemas import ExamData, MindMapNode
+# from app.schemas import ExamData, MindMapNode
 
 logger = logging.getLogger(__name__)
 
